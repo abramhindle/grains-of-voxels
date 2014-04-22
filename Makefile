@@ -17,3 +17,6 @@ KinectCVShapeSample:	KinectCVShapeSample.cpp
 
 playSample: KinectCVShapeSample fromsample.pl manygrain.csd
 	./KinectCVShapeSample | perl fromsample.pl | csound manygrain.csd
+
+playMultiScan: KinectCVShapeMultiScan fromlines.pl manygrain.csd
+	./KinectCVShapeMultiScan | perl fromlines.pl | csound manygrain.csd

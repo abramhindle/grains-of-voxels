@@ -20,7 +20,8 @@
   - lines will have a line ID output
   - need a collection of lines
   - Aides in use as an instrument
-  
+  - KinectCVShapeMultiScan.cpp now have multiple lines + delete
+
 ** Possibility: Sample pixels
    - Output pixels, do it by depth id like 
      depth+maxdepth*(x + y*W)
