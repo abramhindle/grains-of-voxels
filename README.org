@@ -17,6 +17,7 @@
   - fromcv.pl
     - Converts KinectCVShapeScan output to CSound instrument commands
 ** Possibility: Multiple Lines 
+  - https://www.youtube.com/watch?v=xf6l7q61nrM&feature=youtu.be
   - extend KinectCVShapeScan to have multiple lines.
   - to delete a line drag it sideways?
   - lines will have a line ID output
@@ -25,6 +26,7 @@
   - KinectCVShapeMultiScan.cpp now have multiple lines + delete
 
 ** Possibility: Sample pixels
+   - https://www.youtube.com/watch?v=G1h3nnaodvk&feature=youtu.be
    - Output pixels, do it by depth id like 
      depth+maxdepth*(x + y*W)
    - Maybe weight by change but sample pixels and use those as grain
