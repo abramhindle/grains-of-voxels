@@ -20,10 +20,17 @@
   - lines will have a line ID output
   - need a collection of lines
   - Aides in use as an instrument
+  
 ** Possibility: Sample pixels
    - Output pixels, do it by depth id like 
      depth+maxdepth*(x + y*W)
    - Maybe weight by change but sample pixels and use those as grain
      triggers
    - No line needed but still need to output enough grains per second.
-   
+   - Discovered that depth matters more than location when you don't
+     know which location
+   - 90% depth 10% distance from center
+     - $v = 0.9 * ($s/1024.0) + 0.1 * (1 - sqrt($x*$x + $y*$y)/$distmax);
+   -  KinectCVShapeSample fromsample.pl manygrain.csd
+   - make playSample
+

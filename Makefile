@@ -9,6 +9,9 @@ CPP=g++ -O3 -DSDL=1 -lGL -lglut -lSDL  ${SHAREDFLAGS}
 KinectCVShapeScan:	KinectCVShapeScan.cpp
 	$(CPP) -I/usr/include/oscpack/ KinectCVShapeScan.cpp -o KinectCVShapeScan $(SHAREDFLAGS) -loscpack
 
+KinectCVShapeMultiScan:	KinectCVShapeMultiScan.cpp
+	$(CPP) -I/usr/include/oscpack/ KinectCVShapeMultiScan.cpp -o KinectCVShapeMultiScan $(SHAREDFLAGS) -loscpack
+
 KinectCVShapeSample:	KinectCVShapeSample.cpp
 	$(CPP) -I/usr/include/oscpack/ KinectCVShapeSample.cpp -o KinectCVShapeSample $(SHAREDFLAGS) -loscpack
 
