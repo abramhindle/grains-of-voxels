@@ -677,11 +677,11 @@ int main(int argc, char **argv)
                         // delete it if it looks swipey
                         if (m.x >= 9 * WIDTH/10) {
                           delete gyline[line];
-                          for (int oline = line; oline < total_lines - 1; oline++) {
+                          gyline[line] = NULL;
+                          total_lines -= 1;
+                          for (int oline = line; oline < total_lines; oline++) {
                             gyline[oline] = gyline[oline+1];
                           }
-                          gyline[total_lines-1] = NULL;
-                          total_lines -= 1;
                           selected_line = -1;
                           break;
                         } else {
