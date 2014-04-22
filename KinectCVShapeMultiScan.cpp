@@ -121,14 +121,16 @@ int depth_frame = 1024;
 #ifdef SDL
 SDL_Surface * sdlSurface = NULL;
 #endif
-
+int reds[] = {255,0,128,255,200};
+int greens[] = {0,255,0,128,250};
+int blues[] = {0,0,255,255,200};
 class ColorLine
 {
 public:
-  ColorLine(int id, int my) {
-    this.id = id;
+  ColorLine(int mid, int my) {
+    id = mid;
     y = my;
-    color = Scalar(0, 0, 127 + rand() % 127);
+    color = Scalar(blues[mid % 5], greens[mid % 5], reds[mid % 5]);
   }
   int id;
   int y;
@@ -369,7 +371,7 @@ void DrawScene()
     const int len = min(WIDTH,HEIGHT)/2;
 
     int xprime = WIDTH-1;
-#define NSamples 100
+#define NSamples 50
     int samples[NSamples];
     for (int iline = 0 ; iline < total_lines; iline++) {
       for (int i = 0; i < NSamples; i++) {
@@ -378,7 +380,7 @@ void DrawScene()
         int sample = depth_map[x + y * WIDTH];
         samples[i] = sample;
       }
-      fprintf(stdout,"%d", iline+1);
+      fprintf(stdout,"%d", gyline[iline]->id);
       for (int i = 0; i < NSamples; i++) {
         fprintf(stdout,",%d", samples[i]);
       }
@@ -386,7 +388,7 @@ void DrawScene()
       fflush(stdout);
 
       lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
-      lo_send(lo_t, "/samples", "ib", iline, btest);
+      lo_send(lo_t, "/samples", "ib", gyline[iline]->id, btest);
 
       line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), gyline[iline]->color ,4);
       line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), Scalar(0,0,0) ,1);
@@ -716,9 +718,21 @@ int main(int argc, char **argv)
           // ok we didn't move it..
           if (selected_line == -1 && m.x < 9*WIDTH/10) {
             if (total_lines < MAXLINES) {
-              total_lines += 1;
               // make a new 1
-              gyline[total_lines - 1] = new ColorLine(m.y);
+              int myid = 0;
+              for (myid = 0; myid < MAXLINES; myid++) {
+                bool matches = false;
+                for (int j = 0; j < total_lines; j++) {
+                  if (myid == gyline[j]->id) {
+                    matches = true;
+                  }
+                }
+                if (!matches) {
+                  break;
+                }
+              }
+              total_lines += 1;
+              gyline[total_lines - 1] = new ColorLine(myid,m.y);
               m.y;
               selected_line = total_lines - 1;
             }
