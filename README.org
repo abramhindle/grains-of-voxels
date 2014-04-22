@@ -1,7 +1,9 @@
 * Grains of Voxels
   - Treat the space explored by the Kinect, the visible surface, as a
     set of grains that can be played and triggered.
-** Round 1
+  - Here's a video
+    https://www.youtube.com/watch?v=xf6l7q61nrM&feature=youtu.be
+** Ideas
   - A single line is the entire timeline of a sound the depth allows
     you to choose inside of it.
   - Naive in the sense of range. I am not convinced all of the range
