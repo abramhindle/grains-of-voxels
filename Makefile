@@ -12,3 +12,5 @@ KinectCVShapeScan:	KinectCVShapeScan.cpp
 KinectCVShapeSample:	KinectCVShapeSample.cpp
 	$(CPP) -I/usr/include/oscpack/ KinectCVShapeSample.cpp -o KinectCVShapeSample $(SHAREDFLAGS) -loscpack
 
+playSample: KinectCVShapeSample fromsample.pl manygrain.csd
+	./KinectCVShapeSample | perl fromsample.pl | csound manygrain.csd

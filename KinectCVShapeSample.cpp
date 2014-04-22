@@ -356,19 +356,13 @@ void DrawScene()
         int xs[NSamples];
         int ys[NSamples];
         for (int i = 0; i < NSamples; i++) {
-            x[i] = rand() % WIDTH;
-            y[i] = rand() % HEIGHT;
-            int j = x + y * WIDTH;
-            int sample = depth_map[j];
-            if (sample == 0 || sample >= 1023) {
-                samples[i] = 0;
-            } else {
-                sample = sample * j;
-                samples[i] = sample;// / (1024 * WIDTH * HEIGHT;
-            }
+            xs[i] = rand() % WIDTH;
+            ys[i] = rand() % HEIGHT;
+            int j = xs[i] + ys[i] * WIDTH;
+	    samples[i] = depth_map[j];
         }
         for (int i = 0; i < NSamples; i++) {
-            fprintf(stdout,"%d\n", samples[i]);
+          fprintf(stdout,"%d,%d,%d,%d\n", xs[i],ys[i],samples[i], samples[i] + 1024*(xs[i] + ys[i] * WIDTH));
         }
         fflush(stdout);
         lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
