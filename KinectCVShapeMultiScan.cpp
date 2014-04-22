@@ -122,6 +122,16 @@ int depth_frame = 1024;
 SDL_Surface * sdlSurface = NULL;
 #endif
 
+class ColorLine {
+public:
+  ColorLine(int my) {
+    y = my;
+    color = Scalar(rand() % 100 + 50, rand() % 128, rand() % 255);
+  }
+  int y;
+  Scalar color;
+};
+
 int object_depth = 500;
 int ghit = 0;
 int win = 0;
@@ -131,7 +141,7 @@ int gdegree = 0;
 int gtempo = 1;
 #define MAXLINES 10
 int total_lines = 0;
-int gyline[MAXLINES];
+ColorLine * gyline[MAXLINES];
 int selected_line = -1;
 
 bool gkeydown = false;
@@ -352,7 +362,7 @@ void DrawScene()
 	for (int iline = 0 ; iline < total_lines; iline++) {
 	        for (int i = 0; i < NSamples; i++) {	
         	    int x = 0 + i*xprime/(NSamples - 1);
-	            int y = gyline[iline];// + i*yprime/(NSamples - 1);
+	            int y = gyline[iline]->y;// + i*yprime/(NSamples - 1);
         	    int sample = depth_map[x + y * WIDTH];
 	            samples[i] = sample;
         	}
@@ -366,7 +376,8 @@ void DrawScene()
         	lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
 	        lo_send(lo_t, "/samples", "ib", iline, btest);
 
-        	line( dst, Point2f(0, gyline[iline]), Point2f(WIDTH, gyline[iline]), Scalar((iline*255/MAXLINES)%128,(128+(iline*255/MAXLINES))%255,255), 4);
+        	line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), gyline[iline]->color ,4);
+                //Scalar((iline*255/MAXLINES)%128,(128+(iline*255/MAXLINES))%255,255), 4);
 	}
         flip(dst,dst,1);
 
@@ -662,12 +673,14 @@ int main(int argc, char **argv)
                   bool didmove = false;
                   if (selected_line == -1) {
                     for (int line = 0; line < total_lines; line++) {
-                      if (abs(m.y - gyline[line]) < 20) {
+                      if (abs(m.y - gyline[line]->y) < 20) {
                         // delete it if it looks swipey
                         if (m.x >= 9 * WIDTH/10) {
+                          delete gyline[line];
                           for (int oline = line; oline < total_lines - 1; oline++) {
-                            gyline[oline] = gyline[oline+1];                      
+                            gyline[oline] = gyline[oline+1];
                           }
+                          gyline[total_lines-1] = NULL;
                           total_lines -= 1;
                           selected_line = -1;
                           break;
@@ -682,14 +695,15 @@ int main(int argc, char **argv)
                   }
                   // now move the line
                   if (selected_line != -1) {
-                    gyline[selected_line] = m.y;
+                    gyline[selected_line]->y = m.y;
                   }
                   // ok we didn't move it..
                   if (selected_line == -1 && m.x < 9*WIDTH/10) {
                     if (total_lines < MAXLINES) {
                       total_lines += 1;
                       // make a new 1
-                      gyline[total_lines - 1] = m.y;
+                      gyline[total_lines - 1] = new ColorLine(m.y);
+                      m.y;
                       selected_line = total_lines - 1;
                     }
                   }
