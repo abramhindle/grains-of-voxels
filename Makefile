@@ -20,3 +20,6 @@ playSample: KinectCVShapeSample fromsample.pl manygrain.csd
 
 playMultiScan: KinectCVShapeMultiScan fromlines.pl manygrain.csd
 	./KinectCVShapeMultiScan | perl fromlines.pl | csound manygrain.csd
+
+format:
+	astyle --style=1tbs -s2 *.cpp *.h

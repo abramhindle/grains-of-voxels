@@ -22,11 +22,11 @@ maxalloc 551, 600; Limit instances
 maxalloc 552, 600; Limit instances
 
 
-maxalloc 700, 200; Limit instances
-maxalloc 701, 200; Limit instances
-maxalloc 702, 200; Limit instances
-maxalloc 703, 200; Limit instances
-maxalloc 704, 200; Limit instances
+maxalloc 700, 75; Limit instances
+maxalloc 701, 75; Limit instances
+maxalloc 702, 75; Limit instances
+maxalloc 703, 75; Limit instances
+maxalloc 704, 75; Limit instances
 
 
 
@@ -99,17 +99,47 @@ FLpanel 	"Granular",275,100
 FLpanel_end	;***** end of container
 
 
-; FLpanel 	"Granular2",275,100
-;     ibox0  FLbox  "Grain", 1, 6, 12, 300, 20, 0, 0
-;     gkFreq,    iknob1 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
-;     gkAmp,    iknob3 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
-;     gkDur,    iknob5 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
-;     FLsetVal_i   1.0, iknob1
-;     FLsetVal_i   1000, iknob3
-;     FLsetVal_i   0.1, iknob5
-; FLpanel_end	;***** end of container
-; 
-; 
+FLpanel 	"Granular2",275,500
+     ibox0  FLbox  "Grain", 1, 6, 12, 300, 20, 0, 0
+     gkFreq0,   ikFreq0 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
+     gkAmp0,    ikAmp0 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
+     gkDur0,    ikDur0 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
+     gkFreq1,   ikFreq1 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,125
+     gkAmp1,    ikAmp1 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,125
+     gkDur1,    ikDur1 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,125
+     gkFreq2,   ikFreq2 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,225
+     gkAmp2,    ikAmp2 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,225
+     gkDur2,    ikDur2 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,225
+     gkFreq3,   ikFreq3 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,325
+     gkAmp3,    ikAmp3 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,325
+     gkDur3,    ikDur3 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,325
+     gkFreq4,   ikFreq4 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,425
+     gkAmp4,    ikAmp4 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,425
+     gkDur4,    ikDur4 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,425
+
+     FLsetVal_i   1.0, ikFreq0
+     FLsetVal_i   1000, ikAmp0
+     FLsetVal_i   0.1, ikDur0
+
+     FLsetVal_i   1.0, ikFreq1
+     FLsetVal_i   1000, ikAmp1
+     FLsetVal_i   0.1, ikDur1
+
+     FLsetVal_i   1.0, ikFreq2
+     FLsetVal_i   1000, ikAmp2
+     FLsetVal_i   0.1, ikDur2
+
+     FLsetVal_i   1.0, ikFreq3
+     FLsetVal_i   1000, ikAmp3
+     FLsetVal_i   0.1, ikDur3
+
+     FLsetVal_i   1.0, ikFreq4
+     FLsetVal_i   1000, ikAmp4
+     FLsetVal_i   0.1, ikDur4
+
+FLpanel_end	;***** end of container
+ 
+ 
 
 
 FLrun		;***** runs the widget thread 
@@ -168,69 +198,69 @@ aa      oscili 1.0, ipitch, itab, iphase
         out aenv*(aa)
         endin
 
-; 
-; ; the global grain w/ tab
-;         instr 700
-;         idur = i(gkDur0)
-;         p3 = idur
-;         iamp = i(gkAmp0)
-;         ipitch = (i(gkFreq0) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-;         iphase = p4
-; aenv    oscili iamp, 1/idur, 1        
-; aa      oscili 1.0, ipitch, 101, iphase
-;         out aenv*(aa)
-;         endin
-; 
-; 
-; ; the global grain w/ tab
-;         instr 701
-;         idur = i(gkDur1)
-;         p3 = idur
-;         iamp = i(gkAmp1)
-;         ipitch = (i(gkFreq1) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-;         iphase = p4
-; aenv    oscili iamp, 1/idur, 1        
-; aa      oscili 1.0, ipitch, 102, iphase
-;         out aenv*(aa)
-;         endin
-; 
-; ; the global grain w/ tab
-;         instr 702
-;         idur = i(gkDur2)
-;         p3 = idur
-;         iamp = i(gkAmp2)
-;         ipitch = (i(gkFreq2) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-;         iphase = p4
-; aenv    oscili iamp, 1/idur, 1        
-; aa      oscili 1.0, ipitch, 103, iphase
-;         out aenv*(aa)
-;         endin
-; 
-; ; the global grain w/ tab
-;         instr 703
-;         idur = i(gkDur3)
-;         p3 = idur
-;         iamp = i(gkAmp3)
-;         ipitch = (i(gkFreq3) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-;         iphase = p4
-; aenv    oscili iamp, 1/idur, 1        
-; aa      oscili 1.0, ipitch, 104, iphase
-;         out aenv*(aa)
-;         endin
-; 
-; ; the global grain w/ tab
-;         instr 704
-;         idur = i(gkDur4)
-;         p3 = idur
-;         iamp = i(gkAmp4)
-;         ipitch = (i(gkFreq4) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-;         iphase = p4
-; aenv    oscili iamp, 1/idur, 1        
-; aa      oscili 1.0, ipitch, 105, iphase
-;         out aenv*(aa)
-;         endin
-; 
-; 
+
+; the global grain w/ tab
+        instr 700
+        idur = i(gkDur0)
+        p3 = idur
+        iamp = i(gkAmp0)
+        ipitch = (i(gkFreq0) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
+        iphase = p4
+aenv    oscili iamp, 1/idur, 1        
+aa      oscili 1.0, ipitch, 101, iphase
+        out aenv*(aa)
+        endin
+
+
+; the global grain w/ tab
+        instr 701
+        idur = i(gkDur1)
+        p3 = idur
+        iamp = i(gkAmp1)
+        ipitch = (i(gkFreq1) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
+        iphase = p4
+aenv    oscili iamp, 1/idur, 1        
+aa      oscil 1.0, ipitch, 102, iphase
+        out aenv*(aa)
+        endin
+
+; the global grain w/ tab
+        instr 702
+        idur = i(gkDur2)
+        p3 = idur
+        iamp = i(gkAmp2)
+        ipitch = (i(gkFreq2) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
+        iphase = p4
+aenv    oscili iamp, 1/idur, 1        
+aa      oscil 1.0, ipitch, 103, iphase
+        out aenv*(aa)
+        endin
+
+; the global grain w/ tab
+        instr 703
+        idur = i(gkDur3)
+        p3 = idur
+        iamp = i(gkAmp3)
+        ipitch = (i(gkFreq3) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
+        iphase = p4
+aenv    oscili iamp, 1/idur, 1        
+aa      oscil 1.0, ipitch, 104, iphase
+        out aenv*(aa)
+        endin
+
+; the global grain w/ tab
+        instr 704
+        idur = i(gkDur4)
+        p3 = idur
+        iamp = i(gkAmp4)
+        ipitch = (i(gkFreq4) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
+        iphase = p4
+aenv    oscili iamp, 1/idur, 1        
+aa      oscil 1.0, ipitch, 105, iphase
+        out aenv*(aa)
+        endin
+
+
 
 
 
