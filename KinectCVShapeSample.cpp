@@ -25,7 +25,7 @@
  */
 
 /*
-	TODOS
+    TODOS
         - [ ] Scan left to right
         - [ ] Output stuff
         - [ ] Top Bar and Lower Bar
@@ -65,11 +65,6 @@ using namespace std;
 
 #define SDL 1
 
-#ifdef DOGL
-#define REDOFF 2
-#define BLUEOFF 1
-#define GREENOFF 0
-#endif
 
 #ifdef SDL
 #define REDOFF 0
@@ -83,17 +78,6 @@ using namespace std;
 #define WIDTH 640
 #define HEIGHT 480
 
-#ifdef DOGL
-#if defined(__APPLE__)
-#include <GLUT/glut.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/glut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-#endif
 
 #include <math.h>
 
@@ -115,10 +99,6 @@ pthread_mutex_t gl_backbuf_mutex = PTHREAD_MUTEX_INITIALIZER;
 uint8_t *depth_mid, *depth_front, *color_diff_depth_map;
 uint8_t *rgb_back, *rgb_mid, *rgb_front;
 
-#ifdef DOGL
-GLuint gl_depth_tex;
-GLuint gl_rgb_tex;
-#endif
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
@@ -325,7 +305,6 @@ static int dfirst = 1;
 // Does everything
 void DrawScene()
 {
-    Vector<string> output(300);
 
     pthread_mutex_lock(&gl_backbuf_mutex);
 
@@ -365,209 +344,42 @@ void DrawScene()
         Mat depthFrame(HEIGHT,WIDTH, MYCVTYPE, depth_map, sizeof(int) * WIDTH);
 
 
-        //fprintf(stdout,"{ \"type\":\"frame\", \"frame\":%d, \"channels\":%d, \"BPP\":%d, \"W\":%d, \"H\":%d, \"WS\":%d, \"FPS\":%d, \"jmin\":%d, \"threshold\":%d,", //note lack ofnewline
-        //         depth_frame,
-        //         1,
-        //         32,
-        //         WIDTH,
-        //         HEIGHT,
-        //         WIDTH*sizeof(int),
-        //         30,
-        //         jmin,
-        //         gthreshold);
-
-        /*
-
-        Scalar mean;
-        Scalar stddev;
-        // has a mask..
-        meanStdDev(depthFrame, mean, stddev);
-        //fprintf(stdout,"\t\"mean\":%e, \"std\":%e, ",mean[0],stddev[0]);
-
-
-        double mdiff;
-        double mstd;
-        mirrorDiff( depthFrame, &mdiff, &mstd );
-        //fprintf(stdout,"\t\"meanmirror\":%e,\"stdmirror\":%e,\t ", mdiff, mstd);
-
-
-        Mat gray(HEIGHT, WIDTH, CV_8U);
-        depthFrame.convertTo( gray, CV_8U);
-        Moments mo = cv::moments( gray );
-        double svariogram = semivariogram( depthFrame, 1000, 256 );
-        svariogram = (svariogram != svariogram)?-666.0:svariogram;
-        //fprintf( stdout, "\t\"semivariogram\":%e,\t", svariogram );
-
-
-        Scalar diffMean;
-        Scalar diffSTD ;
-        Mat diffGray;
-        {
-          Mat tmpGray1 = gray.colRange(0,WIDTH-1);
-          Mat tmpGray2 = gray.colRange(1,WIDTH);
-          diffGray = tmpGray2 - tmpGray1;
-          meanStdDev(diffGray, diffMean, diffSTD);
-          //fprintf(stdout,"\t\"diffMean\":%e,\"diffSTD\":%e,\t", diffMean[0], diffSTD[0]);
-        }
-
-        */
-
-        //fprintf(stdout,"\t\"spacial-moments\":[%e,%e,%e,%e,%e,%e,%e,%e,%e,%e],\t",
-        //       mo.m00, mo.m10, mo.m01, mo.m20, mo.m11, mo.m02, mo.m30, mo.m21, mo.m12, mo.m03);
-        //fprintf(stdout,"\t\"central-moments\":[%e,%e,%e,%e,%e,%e,%e],\t", mo.mu20, mo.mu11, mo.mu02, mo.mu30, mo.mu21, mo.mu12, mo.mu03);
-
-        /*
-
-        double hu[7];
-        cv::HuMoments( mo, hu );
-        //fprintf(stdout,"\t\"hu\":[%e,%e,%e,%e,%e,%e],\t", hu[0], hu[1],hu[2],hu[3],hu[4],hu[5],hu[6]);
-
-        // contour stuff
-        	vector<vector<Point> > contours;
-        	findContours( gray, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
-                      ////fprintf(stdout,"\t\"hulls\":[");
-                      //bool first = true;
-
-                      */
-
         Scalar color( rand()&255, rand()&255, rand()&255 );
         Mat dst(HEIGHT, WIDTH, CV_8UC3, color_diff_depth_map);
-        //drawContours(  dst , contours, -1, color, 3);
-
-        /*
-
-        // get convex hulls
-        vector<vector<Point> >hulls ( contours.size() );
-        for( int i = 0; i < contours.size(); i++ ) {
-          convexHull( Mat(contours[i]), hulls[i], false );
-        }
-        //fprintf(stdout,"\t\"hulls\":[\t");
-        bool first = true;
-        for (int i = 0; i < contours.size(); i++) {
-          double area = contourArea(hulls[i]);
-          if ( area > 1024 ) {
-            Scalar color( rand()&255, rand()&255, rand()&255 );
-            drawContours( dst, hulls, i, color, 3);//, 8, vector<Vec4i>(), 0, Point() );
-            vector<Point> hull = hulls[i];
-            //fprintf(stdout,"%c{\"area\":%e,\"sides\":%d,\"points\":[",(first?' ':','), area, hull.size());
-            int hullsize = hull.size();
-            vector<double> angles( hullsize );
-            for (int j = 0; j < hullsize; j++) {
-              Point hx1 = hull[j];
-              Point hx2 = hull[(j+1)%hullsize];
-              Point hx3 = hull[(j+2)%hullsize];
-              angles[j] = getAngleABC( hx1, hx2, hx3 );
-              //fprintf(stdout,"%c%d,%d,%f",((j==0)?' ':','),  hx1.x, hx1.y, angles[j]);
-
-            }
-            Scalar amean;
-            Scalar astd;
-            meanStdDev(angles, amean, astd);
-            //fprintf(stdout,"],\"anglemean\":%e,\"anglestd\":%e}\t", amean[0], astd[0]);
-            first = false;
-          }
-        }
-        //fprintf(stdout,"],\t");
-
-
-        */
 
         gdegree = (gdegree + gtempo) % 360;
         const int len = min(WIDTH,HEIGHT)/2;
 
-        //double theta = gdegree * (pi / 180.0f);
-        //double xprime = len * cos( theta ) - 0 * sin(theta);
-        //double yprime = len * sin( theta ) + 0 * cos(theta);
         int xprime = WIDTH-1;
 #define NSamples 100
         int samples[NSamples];
+        int xs[NSamples];
+        int ys[NSamples];
         for (int i = 0; i < NSamples; i++) {
-            int x = 0 + i*xprime/(NSamples - 1);
-            int y = gyline;// + i*yprime/(NSamples - 1);
-            int sample = depth_map[x + y * WIDTH];
-            samples[i] = sample;
-        }
-        //fprintf(stdout,"\t\"samples\":[");
-        for (int i = 0; i < NSamples; i++) {
-            if (i == 0) {
-                fprintf(stdout,"%d", samples[i]);
+            x[i] = rand() % WIDTH;
+            y[i] = rand() % HEIGHT;
+            int j = x + y * WIDTH;
+            int sample = depth_map[j];
+            if (sample == 0 || sample >= 1023) {
+                samples[i] = 0;
             } else {
-                fprintf(stdout,",%d", samples[i]);
+                sample = sample * j;
+                samples[i] = sample;// / (1024 * WIDTH * HEIGHT;
             }
         }
-        fprintf(stdout,"\n");
+        for (int i = 0; i < NSamples; i++) {
+            fprintf(stdout,"%d\n", samples[i]);
+        }
         fflush(stdout);
-        //fprintf(stdout,"],\t");
         lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
         lo_send(lo_t, "/samples", "b", btest);
-
-        line( dst, Point2f(0, gyline), Point2f(WIDTH, gyline), Scalar(0,0,255), 4);
 
         flip(dst,dst,1);
 
 
-        /*
-        const int hSize = 8;
-        const int arr[] = { hSize };
-        const int * histSize = arr;
-        // 255 (pure spectrum color)
-        const float srangesf[] = {0,256};
-        const float * sranges[] = {srangesf};
-        const int channelsi = 0;
-        const int * channels = &channelsi;
-        const Mat m[] = { gray  };
-        const Mat mask;
-        Mat hist;
-        try {
-        	cv::calcHist( m, 1, &channelsi, mask,//do not use mask
-        	              hist, 1, (const int*)histSize, (const float **)sranges,
-        	              true, // the histogram is uniform
-        	              false );
-        	//fprintf(stdout,"\t\t\"hist\":[\t\t\t");
-        	for( int h = 0; h < hSize; h++ ) {
-        	  float binVal = hist.at<float>(h, 0);
-        	  //fprintf(stdout,"%s%e",((h==0)?"":","),binVal);
-        	}
-        	//fprintf(stdout,"]\t");
-        } catch (exception &e) {
-        cout << e.what() << endl;
-        	}
-                     Mat diff(HEIGHT,WIDTH,MYCVTYPE);
-
-                     absdiff(depthFrame,lastDepthFrame,diff);
-                     meanStdDev(diff, mean, stddev);
-                     //fprintf(stdout,"\t,\"meandiff\":%e, \"stddiff\":%e\t",mean[0],stddev[0]);
-
-
-
-                     Mat left( diff, Range(0,HEIGHT-1),Range(0,WIDTH/3) );
-                     Mat right( diff, Range(0,HEIGHT-1), Range(2*WIDTH/3, WIDTH-1));
-                     Mat center( diff, Range(0,HEIGHT-1), Range(2*WIDTH/5, 4*WIDTH/5));
-
-                     meanStdDev(left, mean, stddev);
-                     //fprintf(stdout,"\t,\"leftmean\":%e, \"leftstd\":%e ",mean[0],stddev[0]);
-                     meanStdDev(right, mean, stddev);
-                     //fprintf(stdout,"\t,\"rightmean\":%e, \"rightstd\":%e ",mean[0],stddev[0]);
-                     meanStdDev(center, mean, stddev);
-                     //fprintf(stdout,"\t,\"centermean\":%e, \"centerstd\":%e ",mean[0],stddev[0]);
-
-
-                     */
-
         depthFrame.copyTo(lastDepthFrame);
 
-        if (gkeydown) {
-            //fprintf(stdout,",\"keydown\":\"%c\"", gkeysym);
-            //gkeydown = false;
-        }
-
-        //fprintf(stdout,"}\n");
-
-
         depth_frame++;
-        //fflush( stdout );
-
-
 
     }
     if (got_rgb) {
@@ -583,162 +395,10 @@ void DrawScene()
 #endif
 
 
-#ifdef DOGL
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    glEnable(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, color_diff_depth_map );
-
-    glBegin(GL_TRIANGLE_FAN);
-    glColor4f(255.0f, 255.0f, 255.0f, 255.0f);
-    glTexCoord2f(0, 0);
-    glVertex3f(0,0,0);
-    glTexCoord2f(1, 0);
-    glVertex3f(640,0,0);
-    glTexCoord2f(1, 1);
-    glVertex3f(640,480,0);
-    glTexCoord2f(0, 1);
-    glVertex3f(0,480,0);
-    glEnd();
-
-
-    glutSwapBuffers();
-#endif
 
 }
 
-#ifdef DOGL
-void keyPressed(unsigned char key, int x, int y)
-{
-    if (key == 27) {
-        die = 1;
-        pthread_join(freenect_thread, NULL);
-        glutDestroyWindow(window);
-        free(color_diff_depth_map);
-        free(depth_map);
-        free(old_depth_map);
-        free(diff_depth_map);
-        free(depth_mid);
-        free(depth_front);
-        free(rgb_back);
-        free(rgb_mid);
-        free(rgb_front);
-        pthread_exit(NULL);
-    }
-    if (key == 'w') {
-        freenect_angle++;
-        if (freenect_angle > 30) {
-            freenect_angle = 30;
-        }
-    }
-    if (key == 's') {
-        freenect_angle = 0;
-    }
-    if (key == 'f') {
-        if (requested_format == FREENECT_VIDEO_IR_8BIT)
-            requested_format = FREENECT_VIDEO_RGB;
-        else if (requested_format == FREENECT_VIDEO_RGB)
-            requested_format = FREENECT_VIDEO_YUV_RGB;
-        else
-            requested_format = FREENECT_VIDEO_IR_8BIT;
-    }
-    if (key == 'x') {
-        freenect_angle--;
-        if (freenect_angle < -30) {
-            freenect_angle = -30;
-        }
-    }
-    if (key == '1') {
-        freenect_set_led(f_dev,LED_GREEN);
-    }
-    if (key == '2') {
-        freenect_set_led(f_dev,LED_RED);
-    }
-    if (key == '3') {
-        freenect_set_led(f_dev,LED_YELLOW);
-    }
-    if (key == '4') {
-        freenect_set_led(f_dev,LED_BLINK_GREEN);
-    }
-    if (key == '5') {
-        // 5 is the same as 4
-        freenect_set_led(f_dev,LED_BLINK_GREEN);
-    }
-    if (key == '6') {
-        freenect_set_led(f_dev,LED_BLINK_RED_YELLOW);
-    }
-    if (key == '0') {
-        freenect_set_led(f_dev,LED_OFF);
-    }
 
-    freenect_set_tilt_degs(f_dev,freenect_angle);
-}
-#endif
-
-#ifdef DOGL
-void ReSizeGLScene(int Width, int Height)
-{
-    glViewport(0,0,Width,Height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    //glOrtho (0, 1280, 480, 0, -1.0f, 1.0f);
-    glOrtho (0, 640, 480, 0, -1.0f, 1.0f);
-    glMatrixMode(GL_MODELVIEW);
-}
-
-void InitGL(int Width, int Height)
-{
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClearDepth(1.0);
-    glDepthFunc(GL_LESS);
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel(GL_SMOOTH);
-    glGenTextures(1, &gl_depth_tex);
-    glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glGenTextures(1, &gl_rgb_tex);
-    glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    ReSizeGLScene(Width, Height);
-}
-#endif
-
-
-#ifdef DOGL
-void *gl_threadfunc(void *arg)
-{
-    fprintf(stderr,"GL thread\n");
-
-    glutInit(&g_argc, g_argv);
-
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-    //glutInitWindowSize(1280, 480);
-    glutInitWindowSize(640, 480);
-    glutInitWindowPosition(0, 0);
-
-    window = glutCreateWindow("LibFreenect");
-
-    glutDisplayFunc(&DrawScene);
-    glutIdleFunc(&DrawScene);
-    glutReshapeFunc(&ReSizeGLScene);
-    glutKeyboardFunc(&keyPressed);
-
-    //InitGL(1280, 480);
-    InitGL(640, 480);
-
-    glutMainLoop();
-
-    return NULL;
-}
-#endif
 uint16_t t_gamma[2048];
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
@@ -875,9 +535,6 @@ int main(int argc, char **argv)
     SDL_MouseMotionEvent m;
 
 #endif
-#ifdef DOGL
-    color_diff_depth_map = (uint8_t*)malloc(640*480*3);
-#endif
     int pixels = 640*480;
     srand(time(0));
 
@@ -969,14 +626,6 @@ int main(int argc, char **argv)
                     exit(0);
                 } else if (e.key.keysym.sym == SDLK_ESCAPE) { //Escape
                     exit(0);
-                } else if (e.key.keysym.sym == 'k') {
-                    gtempo--;
-                } else if (e.key.keysym.sym == 'l') {
-                    gtempo++;
-                } else if (e.key.keysym.sym == '[') {
-                    gyline--;
-                } else if (e.key.keysym.sym == ']') {
-                    gyline++;
                 } else if (e.key.keysym.sym == 'h') {
                     gthreshold=(gthreshold>1024-10)?1024:(gthreshold+10);
                 } else if (e.key.keysym.sym == 'j') {
@@ -1020,10 +669,5 @@ int main(int argc, char **argv)
 #endif
 
 
-#ifdef DOGL
-    // OS X requires GLUT to run on the main thread
-    gl_threadfunc(NULL);
-
-#endif
     return 0;
 }

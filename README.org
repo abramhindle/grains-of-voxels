@@ -1,0 +1,29 @@
+* Grains of Voxels
+  - Treat the space explored by the Kinect, the visible surface, as a
+    set of grains that can be played and triggered.
+** Round 1
+  - A single line is the entire timeline of a sound the depth allows
+    you to choose inside of it.
+  - Naive in the sense of range. I am not convinced all of the range
+    can be addressed.
+  - Range is uniformly segmented by time so there are probably
+    overlapping grains.
+  - KinectCVShapeScan.cpp
+    - produced a Kinect View with a line
+  - manygrain.csd
+    - has a UI allowing tuning of the instrument
+  - fromcv.pl
+    - Converts KinectCVShapeScan output to CSound instrument commands
+** Possibility: Multiple Lines 
+  - extend KinectCVShapeScan to have multiple lines.
+  - to delete a line drag it sideways?
+  - lines will have a line ID output
+  - need a collection of lines
+  - Aides in use as an instrument
+** Possibility: Sample pixels
+   - Output pixels, do it by depth id like 
+     depth+maxdepth*(x + y*W)
+   - Maybe weight by change but sample pixels and use those as grain
+     triggers
+   - No line needed but still need to output enough grains per second.
+   
