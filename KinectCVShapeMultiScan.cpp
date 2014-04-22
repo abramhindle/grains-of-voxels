@@ -124,12 +124,12 @@ SDL_Surface * sdlSurface = NULL;
 
 class ColorLine {
 public:
-  ColorLine(int my) {
-    y = my;
-    color = Scalar(rand() % 100 + 50, rand() % 128, rand() % 255);
-  }
-  int y;
-  Scalar color;
+    ColorLine(int my) {
+        y = my;
+        color = Scalar(rand() % 100 + 50, rand() % 128, rand() % 255);
+    }
+    int y;
+    Scalar color;
 };
 
 int object_depth = 500;
@@ -359,26 +359,29 @@ void DrawScene()
         int xprime = WIDTH-1;
 #define NSamples 100
         int samples[NSamples];
-	for (int iline = 0 ; iline < total_lines; iline++) {
-	        for (int i = 0; i < NSamples; i++) {	
-        	    int x = 0 + i*xprime/(NSamples - 1);
-	            int y = gyline[iline]->y;// + i*yprime/(NSamples - 1);
-        	    int sample = depth_map[x + y * WIDTH];
-	            samples[i] = sample;
-        	}
-                fprintf(stdout,"%d", iline+1);
-	        for (int i = 0; i < NSamples; i++) {
-                  fprintf(stdout,",%d", samples[i]);
-	        }
-	        fprintf(stdout,"\n");
-	        fflush(stdout);
+        for (int iline = 0 ; iline < total_lines; iline++) {
+            for (int i = 0; i < NSamples; i++) {
+                int x = 0 + i*xprime/(NSamples - 1);
+                int y = gyline[iline]->y;// + i*yprime/(NSamples - 1);
+                int sample = depth_map[x + y * WIDTH];
+                samples[i] = sample;
+            }
+            fprintf(stdout,"%d", iline+1);
+            for (int i = 0; i < NSamples; i++) {
+                fprintf(stdout,",%d", samples[i]);
+            }
+            fprintf(stdout,"\n");
+            fflush(stdout);
 
-        	lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
-	        lo_send(lo_t, "/samples", "ib", iline, btest);
+            lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
+            lo_send(lo_t, "/samples", "ib", iline, btest);
 
-        	line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), gyline[iline]->color ,4);
-                //Scalar((iline*255/MAXLINES)%128,(128+(iline*255/MAXLINES))%255,255), 4);
-	}
+            line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), gyline[iline]->color ,4);
+            line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), Scalar(0,0,0) ,1);
+            line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH/10, gyline[iline]->y), Scalar(0,0,255) ,4);
+
+            //Scalar((iline*255/MAXLINES)%128,(128+(iline*255/MAXLINES))%255,255), 4);
+        }
         flip(dst,dst,1);
 
 
@@ -662,51 +665,51 @@ int main(int argc, char **argv)
             case SDL_QUIT:
                 exit(0);
             case SDL_MOUSEBUTTONUP:
-              selected_line = -1;
-              break;
-            case SDL_MOUSEMOTION:              
+                selected_line = -1;
+                break;
+            case SDL_MOUSEMOTION:
             case SDL_MOUSEBUTTONDOWN:
                 m = e.motion;
                 /* paint in the cursor on click */
                 if (m.state) {
-                  // did you click on an existing line?
-                  bool didmove = false;
-                  if (selected_line == -1) {
-                    for (int line = 0; line < total_lines; line++) {
-                      if (abs(m.y - gyline[line]->y) < 20) {
-                        // delete it if it looks swipey
-                        if (m.x >= 9 * WIDTH/10) {
-                          delete gyline[line];
-                          gyline[line] = NULL;
-                          total_lines -= 1;
-                          for (int oline = line; oline < total_lines; oline++) {
-                            gyline[oline] = gyline[oline+1];
-                          }
-                          selected_line = -1;
-                          break;
-                        } else {
-                          // move the line otherwise
-                          selected_line = line;
+                    // did you click on an existing line?
+                    bool didmove = false;
+                    if (selected_line == -1) {
+                        for (int line = 0; line < total_lines; line++) {
+                            if (abs(m.y - gyline[line]->y) < 20) {
+                                // delete it if it looks swipey
+                                if (m.x >= 9 * WIDTH/10) {
+                                    delete gyline[line];
+                                    gyline[line] = NULL;
+                                    total_lines -= 1;
+                                    for (int oline = line; oline < total_lines; oline++) {
+                                        gyline[oline] = gyline[oline+1];
+                                    }
+                                    selected_line = -1;
+                                    break;
+                                } else {
+                                    // move the line otherwise
+                                    selected_line = line;
+                                }
+                                didmove = true;
+                                break;
+                            }
                         }
-                        didmove = true;                        
-                        break;
-                      }
                     }
-                  }
-                  // now move the line
-                  if (selected_line != -1) {
-                    gyline[selected_line]->y = m.y;
-                  }
-                  // ok we didn't move it..
-                  if (selected_line == -1 && m.x < 9*WIDTH/10) {
-                    if (total_lines < MAXLINES) {
-                      total_lines += 1;
-                      // make a new 1
-                      gyline[total_lines - 1] = new ColorLine(m.y);
-                      m.y;
-                      selected_line = total_lines - 1;
+                    // now move the line
+                    if (selected_line != -1) {
+                        gyline[selected_line]->y = m.y;
                     }
-                  }
+                    // ok we didn't move it..
+                    if (selected_line == -1 && m.x < 9*WIDTH/10) {
+                        if (total_lines < MAXLINES) {
+                            total_lines += 1;
+                            // make a new 1
+                            gyline[total_lines - 1] = new ColorLine(m.y);
+                            m.y;
+                            selected_line = total_lines - 1;
+                        }
+                    }
                 } /* if state */
             } /* event type */
         } /* Poll */

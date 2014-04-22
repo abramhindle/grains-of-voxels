@@ -359,10 +359,10 @@ void DrawScene()
             xs[i] = rand() % WIDTH;
             ys[i] = rand() % HEIGHT;
             int j = xs[i] + ys[i] * WIDTH;
-	    samples[i] = depth_map[j];
+            samples[i] = depth_map[j];
         }
         for (int i = 0; i < NSamples; i++) {
-          fprintf(stdout,"%d,%d,%d,%d\n", xs[i],ys[i],samples[i], samples[i] + 1024*(xs[i] + ys[i] * WIDTH));
+            fprintf(stdout,"%d,%d,%d,%d\n", xs[i],ys[i],samples[i], samples[i] + 1024*(xs[i] + ys[i] * WIDTH));
         }
         fflush(stdout);
         lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
