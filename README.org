@@ -60,4 +60,5 @@
    - [ ] Need a good palette for multiple lines
    - [ ] I want evolving sounds
    - [ ] Harsh sounds too?
+   - [ ] Test on laptop
    
