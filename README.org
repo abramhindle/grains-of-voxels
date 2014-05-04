@@ -39,3 +39,21 @@
    -  KinectCVShapeSample fromsample.pl manygrain.csd
    - make playSample
 
+
+** Performance
+   - 20 minutes
+   - 666
+     - 6 minutes samples
+     - 6 minutes multiple lines
+     - 6 minutes samples with public
+   - Can we make setup instananeous and simple?
+   - [ ] Braindead Startup script
+   - [ ] Need a good palette for the sound of the space.
+   - Bring
+     - powerbar
+     - audio cable
+     - kinect
+     - laptop
+   - [ ] Need a good palette for multiple lines
+   - [ ] I want evolving sounds
+   - [ ] Harsh sounds too?
