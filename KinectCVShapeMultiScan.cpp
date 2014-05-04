@@ -121,6 +121,8 @@ int depth_frame = 1024;
 #ifdef SDL
 SDL_Surface * sdlSurface = NULL;
 #endif
+#define MAXLINES 4
+
 int reds[] = {255,0,128,255,200};
 int greens[] = {0,255,0,128,250};
 int blues[] = {0,0,255,255,200};
@@ -130,7 +132,7 @@ public:
   ColorLine(int mid, int my) {
     id = mid;
     y = my;
-    color = Scalar(blues[mid % 5], greens[mid % 5], reds[mid % 5]);
+    color = Scalar(blues[mid % MAXLINES], greens[mid % MAXLINES], reds[mid % MAXLINES]);
   }
   int id;
   int y;
@@ -144,7 +146,7 @@ int wotime = 0;
 
 int gdegree = 0;
 int gtempo = 1;
-#define MAXLINES 5
+
 int total_lines = 0;
 ColorLine * gyline[MAXLINES];
 int selected_line = -1;

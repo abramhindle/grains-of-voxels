@@ -29,6 +29,11 @@ playSampleOSC: KinectCVShapeSample fromsample-osc.pl manygrain-4101-0.csd manygr
 playMultiScan: KinectCVShapeMultiScan fromlines.pl manygrain.csd
 	./KinectCVShapeMultiScan | perl fromlines.pl | csound manygrain.csd
 
+playMultiScanOSC: KinectCVShapeMultiScan fromlines-osc.pl manygrain-4101-0.csd manygrain-4102-0.csd manygrain-4103-0.csd manygrain-4104-0.csd csound-starter.sh
+	./KinectCVShapeMultiScan | perl fromlines-osc.pl | bash csound-starter.sh manygrain-4101-1.csd manygrain-4102-1.csd manygrain-4103-1.csd manygrain-4104-1.csd 
+
+
+
 format:
 	astyle --style=1tbs -s2 *.cpp *.h
 
