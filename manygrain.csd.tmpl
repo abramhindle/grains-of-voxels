@@ -13,6 +13,8 @@ ksmps   =  16
 nchnls	=  1
 
 #define PORT #<TMPL_VAR NAME="PORT">#
+#define I #<TMPL_VAR NAME="I">#
+
 
 ;;;#define SIZE #268435456#
 #define SIZE #4194304#
@@ -106,44 +108,75 @@ FLpanel_end	;***** end of container
 </TMPL_UNLESS>
 
 <TMPL_IF NAME="FOUR">
-FLpanel 	"Granular2 $PORT",275,500
+
+gkFreq0 init 0
+gkAmp0 init 0
+gkDur0 init 0
+gkFreq1 init 0
+gkAmp1 init 0
+gkDur1 init 0
+gkFreq2 init 0
+gkAmp2 init 0
+gkDur2 init 0
+gkFreq3 init 0
+gkAmp3 init 0
+gkDur3 init 0
+gkFreq4 init 0
+gkAmp4 init 0
+gkDur4 init 0
+
+
+
+
+
+
+FLpanel 	"Granular Line $I $PORT",275,100
      ibox0  FLbox  "Grain", 1, 6, 12, 300, 20, 0, 0
-     gkFreq0,   ikFreq0 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
-     gkAmp0,    ikAmp0 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
-     gkDur0,    ikDur0 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
-     gkFreq1,   ikFreq1 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,125
-     gkAmp1,    ikAmp1 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,125
-     gkDur1,    ikDur1 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,125
-     gkFreq2,   ikFreq2 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,225
-     gkAmp2,    ikAmp2 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,225
-     gkDur2,    ikDur2 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,225
-     gkFreq3,   ikFreq3 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,325
-     gkAmp3,    ikAmp3 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,325
-     gkDur3,    ikDur3 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,325
-     gkFreq4,   ikFreq4 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,425
-     gkAmp4,    ikAmp4 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,425
-     gkDur4,    ikDur4 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,425
+     gkFreq$I,   ikFreq$I FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
+     gkAmp$I,    ikAmp$I FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
+     gkDur$I,    ikDur$I FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
+;     gkFreq0,   ikFreq0 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
+;     gkAmp0,    ikAmp0 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
+;     gkDur0,    ikDur0 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
+;      gkFreq1,   ikFreq1 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,125
+;      gkAmp1,    ikAmp1 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,125
+;      gkDur1,    ikDur1 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,125
+;      gkFreq2,   ikFreq2 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,225
+;      gkAmp2,    ikAmp2 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,225
+;      gkDur2,    ikDur2 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,225
+;      gkFreq3,   ikFreq3 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,325
+;      gkAmp3,    ikAmp3 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,325
+;      gkDur3,    ikDur3 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,325
+;      gkFreq4,   ikFreq4 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,425
+;      gkAmp4,    ikAmp4 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,425
+;      gkDur4,    ikDur4 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,425
+; 
 
-     FLsetVal_i   1.0, ikFreq0
-     FLsetVal_i   1000, ikAmp0
-     FLsetVal_i   0.1, ikDur0
+     FLsetVal_i   1.0, ikFreq$I
+     FLsetVal_i   1000, ikAmp$I
+     FLsetVal_i   0.1, ikDur$I
 
-     FLsetVal_i   1.0, ikFreq1
-     FLsetVal_i   1000, ikAmp1
-     FLsetVal_i   0.1, ikDur1
+;     FLsetVal_i   1.0, ikFreq0
+;     FLsetVal_i   1000, ikAmp0
+;     FLsetVal_i   0.1, ikDur0
 
-     FLsetVal_i   1.0, ikFreq2
-     FLsetVal_i   1000, ikAmp2
-     FLsetVal_i   0.1, ikDur2
 
-     FLsetVal_i   1.0, ikFreq3
-     FLsetVal_i   1000, ikAmp3
-     FLsetVal_i   0.1, ikDur3
-
-     FLsetVal_i   1.0, ikFreq4
-     FLsetVal_i   1000, ikAmp4
-     FLsetVal_i   0.1, ikDur4
-
+;     FLsetVal_i   1.0, ikFreq1
+;     FLsetVal_i   1000, ikAmp1
+;     FLsetVal_i   0.1, ikDur1
+;
+;     FLsetVal_i   1.0, ikFreq2
+;     FLsetVal_i   1000, ikAmp2
+;     FLsetVal_i   0.1, ikDur2
+;
+;     FLsetVal_i   1.0, ikFreq3
+;     FLsetVal_i   1000, ikAmp3
+;     FLsetVal_i   0.1, ikDur3
+;
+;     FLsetVal_i   1.0, ikFreq4
+;     FLsetVal_i   1000, ikAmp4
+;     FLsetVal_i   0.1, ikDur4
+;
 FLpanel_end	;***** end of container
 </TMPL_IF>
  

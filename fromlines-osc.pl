@@ -35,13 +35,14 @@ while(<STDIN>) {
                   ];
         push @{$buffers[$n % 4]}, $osc;
         #$str = join(" ",("i556",(rand()*0.01),0.1, 5000, 4.0, max(0.0,min(1.0,$v)), 1.0,$/));
-        warn $str;
+        #warn $str;
         #print $str;
     }
     my $cli = 0;
     foreach my $buffer (@buffers) {
         my @buf = @$buffer;
         if (@buf) {
+            warn "Sending $cli ".scalar(@buf)." messages!";
             $clients[$cli]->send(['#bundle', 0, @buf]);
         }
         $cli++;

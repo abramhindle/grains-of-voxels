@@ -389,9 +389,11 @@ void DrawScene()
       fprintf(stdout,"\n");
       fflush(stdout);
 
+      /* disabling OSC for the performance 
       lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
       lo_send(lo_t, "/samples", "ib", gyline[iline]->id, btest);
-
+      */
+      
       line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), gyline[iline]->color ,4);
       line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH, gyline[iline]->y), Scalar(0,0,0) ,1);
       line( dst, Point2f(0, gyline[iline]->y), Point2f(WIDTH/10, gyline[iline]->y), Scalar(0,0,255) ,4);

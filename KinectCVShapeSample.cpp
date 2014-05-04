@@ -374,8 +374,10 @@ void DrawScene()
       fprintf(stdout,"%d,%d,%d,%d\n", xs[i],ys[i],samples[i], samples[i] + 1024*(xs[i] + ys[i] * WIDTH));
     }
     fflush(stdout);
+    /* // disabling OSC for the performance 
     lo_blob btest = lo_blob_new(NSamples * sizeof(int), samples);
     lo_send(lo_t, "/samples", "b", btest);
+    */
 
     flip(dst,dst,1);
 

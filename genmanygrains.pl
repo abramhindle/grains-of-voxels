@@ -6,12 +6,15 @@ my @ports = qw(4101 4102 4103 4104);
 my $template = HTML::Template->new(filename => 'manygrain.csd.tmpl',
                                    "die_on_bad_params"=>0 );
 for my $four (0,1) {
+    my $i = 0;
     for my $port (@ports) {
         $template->param(PORT=>$port);
         $template->param(FOUR=>$four);
+        $template->param(I=>$i);
         open(my $fd, ">", "manygrain-$port-$four.csd");
         print $fd $template->output();
         close($fd);
+        $i++;
     }
 }
 
