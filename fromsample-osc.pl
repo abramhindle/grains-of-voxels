@@ -27,7 +27,7 @@ while(<STDIN>) {
                "i", 550, "f", (rand()*0.01), "f", 0.1, "f", max(0.0,min(1.0,$v))
               ];
     #$str = join(" ",("i550",(rand()*0.01),0.1, max(0.0,min(1.0,$v)),$/));
-    warn join(" ", @$osc);
+    #warn join(" ", @$osc);
     # print $str;
     $clients[choose($x,$y)]->send($osc);
 }

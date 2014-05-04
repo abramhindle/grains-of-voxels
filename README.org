@@ -49,8 +49,8 @@
    - Can we make setup instananeous and simple?
    - [X] Split to multiple csounds
      - [X] Fix multiple csounds with generation and multiple versions
-   - [ ] Braindead Startup script
-     - I think the make file works and direct to the sound car
+   - [X] Braindead Startup script
+     - I think the make file works and direct to the sound card
    - [ ] Need a good palette for the sound of the space.
    - Bring
      - powerbar
@@ -61,4 +61,5 @@
    - [ ] I want evolving sounds
    - [ ] Harsh sounds too?
    - [ ] Test on laptop
+   - [ ] Rotating phase
    
