@@ -61,5 +61,7 @@
    - [ ] I want evolving sounds
    - [ ] Harsh sounds too?
    - [ ] Test on laptop
-   - [ ] Rotating phase
+   - [X] Rotating phase
+     - works..
+     - not sure
    

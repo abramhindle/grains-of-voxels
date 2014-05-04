@@ -18,7 +18,7 @@ nchnls	=  1
 
 ;;;#define SIZE #268435456#
 #define SIZE #4194304#
-
+#define INITPHASERATE #0.01#
 
 maxalloc 556, 600; Limit instances
 maxalloc 550, 600; Limit instances
@@ -34,6 +34,8 @@ maxalloc 704, 75; Limit instances
 </TMPL_IF>
 
 
+gitphase init 5
+gkphaserate init $INITPHASERATE
 
 
 
@@ -62,30 +64,34 @@ gkDens init 20
 gkDur init 0.1
 gkPhase init 0
 gkPhaseMix init 1
-
+gkTab init 101
 giEXP = -1
 giLINEAR = 0
 
 FLcolor	180,200,199
 
 <TMPL_UNLESS NAME="FOUR">
-FLpanel 	"Granular $PORT",275,100
+FLpanel 	"Granular $PORT",325,100
     istarttim = 0
     idropi = 666
     idur = 1
-    ibox0  FLbox  "Grain", 1, 6, 12, 300, 20, 0, 0
+    ibox0  FLbox  "Grain", 1, 6, 12, 325, 20, 0, 0
     ;FLsetFont   7, ibox0
                 
 ;    gkFreq,    iknob1 FLknob  "Freq", 0.00001, 2, -1,1, -1, 50, 0,0
     gkFreq,    iknob1 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
 ;    gkFreqRand,    iknob2 FLknob  "FreqRand", 0.00001, 0.1, -1,1, -1, 50, 50,0
-    gkAmp,    iknob3 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
+    gkAmp,    iknob3 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 75,25
 ;    gkDens,    iknob4 FLknob  "Dens", 1, 300, -1,1, -1, 50, 150,0
-    gkDur,    iknob5 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
-    ;kout, ihandle FLslider "label", imin, imax, iexp, itype, idisp, iwidth, \
+    gkDur,    iknob5 FLknob  "Dur", 0.001, 1.0, -1,1, -1, 50, 150,25
+    gkphaserate,    iknob6 FLknob  "PhaseR", 0.001, 4.0, -1,1, -1, 50, 225,25
+
+    gkTab, iroller FLtext "Choice", 101, 105, 1, 3, 50, 50, 275, 25
+
+    ;kout, ihandle FLslider "label", imin, imax, iexp, itype, idisp, iwidth, 
     ;  iheight, ix, iy
 ;    gkPhase, islider1 FLslider "Phase", 0, 1, 0, 1, -1, 250, 50, 0, 100
-    ;kout, ihandle FLknob "label", imin, imax, iexp, itype, idisp, iwidth, \
+    ;kout, ihandle FLknob "label", imin, imax, iexp, itype, idisp, iwidth, 
     ;  ix, iy [, icursorsize]
 ;    gkPhaseMix,    iknob6 FLknob  "PhaseMix", 0, 1.0, 0,1, -1, 50, 200,150
     FLsetVal_i   1.0, iknob1
@@ -96,12 +102,16 @@ FLpanel 	"Granular $PORT",275,100
 ;    FLsetVal_i   0.0, islider1
 ;    FLsetVal_i   1.0, iknob6
 
+    FLsetVal_i   $INITPHASERATE , iknob6
+    FLsetVal_i   101, iroller
+
+
 ;    gkIComp01,     gicompslider01 FLslider "01", 0, 1, 0, 1, -1, 250, 30, 255, (0)
     ion = 0
     ioff = 0
     ix = 0
-    iy = 150
-    iopcode = 0 ; i 
+    iy = 150 
+   iopcode = 0 ; i 
 
 
 FLpanel_end	;***** end of container
@@ -133,8 +143,10 @@ gkDur4 init 0
 FLpanel 	"Granular Line $I $PORT",275,100
      ibox0  FLbox  "Grain", 1, 6, 12, 300, 20, 0, 0
      gkFreq$I,   ikFreq$I FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
-     gkAmp$I,    ikAmp$I FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
-     gkDur$I,    ikDur$I FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
+     gkAmp$I,    ikAmp$I FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 75,25
+     gkDur$I,    ikDur$I FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 150,25
+    gkphaserate,    ikphaserate$I FLknob  "PhaseR", 0.001, 4.0, -1,1, -1, 50, 225,25
+
 ;     gkFreq0,   ikFreq0 FLknob  "Freq", 0.01, 5, giLINEAR ,1, -1, 50, 0,25
 ;     gkAmp0,    ikAmp0 FLknob  "Amp", 0.0001, 10000, -1,1, -1, 50, 100,25
 ;     gkDur0,    ikDur0 FLknob  "Dur", 0.01, 1.0, -1,1, -1, 50, 200,25
@@ -155,6 +167,7 @@ FLpanel 	"Granular Line $I $PORT",275,100
      FLsetVal_i   1.0, ikFreq$I
      FLsetVal_i   1000, ikAmp$I
      FLsetVal_i   0.1, ikDur$I
+     FLsetVal_i   $INITPHASERATE, ikphaserate$I
 
 ;     FLsetVal_i   1.0, ikFreq0
 ;     FLsetVal_i   1000, ikAmp0
@@ -196,8 +209,12 @@ itmp	ftgen 2, 0, 16384, 7, 1, 16384, -1
 /* sine */
 itmp	ftgen 4, 0, 1024, 10, 1
 
+/* positive sawtooth wave */
+itmp    ftgen 5, 0, 16384, 7, 0, 16384, 1
 
-
+         instr Phase
+gkphase   oscili 1, (gkphaserate/ ($SIZE / 44100)), gitphase
+          endin          
 
 ; the grain
         instr 556
@@ -218,9 +235,11 @@ aa01     poscil iamp01, ipitch, 101, iphase
         p3 = idur
         iamp = i(gkAmp)
         ipitch = (i(gkFreq) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-        iphase = p4
+;        iphase = p4
+         itab = i(gkTab) ; was 101
+iphase  wrap p4 + i(gkphase), 0.0, 1.0
 aenv    oscili iamp, 1/idur, 1        
-aa      oscili 1.0, ipitch, 101, iphase
+aa      oscili 1.0, ipitch, itab, iphase
         out aenv*(aa)
         endin
 
@@ -246,7 +265,8 @@ aa      oscili 1.0, ipitch, itab, iphase
         p3 = idur
         iamp = i(gkAmp0)
         ipitch = (i(gkFreq0) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-        iphase = p4
+;        iphase = p4
+iphase  wrap p4 + i(gkphase), 0.0, 1.0
 aenv    oscili iamp, 1/idur, 1        
 aa      oscili 1.0, ipitch, 101, iphase
         out aenv*(aa)
@@ -259,7 +279,8 @@ aa      oscili 1.0, ipitch, 101, iphase
         p3 = idur
         iamp = i(gkAmp1)
         ipitch = (i(gkFreq1) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-        iphase = p4
+;        iphase = p4
+iphase  wrap p4 + i(gkphase), 0.0, 1.0
 aenv    oscili iamp, 1/idur, 1        
 aa      oscil 1.0, ipitch, 102, iphase
         out aenv*(aa)
@@ -271,7 +292,8 @@ aa      oscil 1.0, ipitch, 102, iphase
         p3 = idur
         iamp = i(gkAmp2)
         ipitch = (i(gkFreq2) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-        iphase = p4
+;        iphase = p4
+iphase  wrap p4 + i(gkphase), 0.0, 1.0
 aenv    oscili iamp, 1/idur, 1        
 aa      oscil 1.0, ipitch, 103, iphase
         out aenv*(aa)
@@ -283,7 +305,8 @@ aa      oscil 1.0, ipitch, 103, iphase
         p3 = idur
         iamp = i(gkAmp3)
         ipitch = (i(gkFreq3) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-        iphase = p4
+;        iphase = p4
+iphase  wrap p4 + i(gkphase), 0.0, 1.0
 aenv    oscili iamp, 1/idur, 1        
 aa      oscil 1.0, ipitch, 104, iphase
         out aenv*(aa)
@@ -295,7 +318,8 @@ aa      oscil 1.0, ipitch, 104, iphase
         p3 = idur
         iamp = i(gkAmp4)
         ipitch = (i(gkFreq4) / ($SIZE / 44100)) ; 16 1.352e-12 ; 2 is 2X 0.5 is 1/2
-        iphase = p4
+;        iphase = p4
+iphase  wrap p4 + i(gkphase), 0.0, 1.0
 aenv    oscili iamp, 1/idur, 1        
 aa      oscil 1.0, ipitch, 105, iphase
         out aenv*(aa)
@@ -347,6 +371,8 @@ t 0 60
 
 f 0 3600
 i"OscSetter" 0 36000
+i"Phase" 0 36000
+
 i556 0 0.1 11111 4.0 0.52 1.0
 i556 0.1 0.1 11111 4.0 0.53 1.0
 i556 0.2 0.1 11111 4.0 0.54 1.0
