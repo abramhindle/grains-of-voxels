@@ -14,7 +14,7 @@ nchnls	=  1
 
 #define PORT #<TMPL_VAR NAME="PORT">#
 #define I #<TMPL_VAR NAME="I">#
-
+#define MAXTAB #107#
 
 ;;;#define SIZE #268435456#
 #define SIZE #4194304#
@@ -23,7 +23,7 @@ nchnls	=  1
 maxalloc 556, 600; Limit instances
 maxalloc 550, 600; Limit instances
 maxalloc 551, 600; Limit instances
-maxalloc 552, 600; Limit instances
+;;maxalloc 552, 600; Limit instances
 
 <TMPL_IF NAME="FOUR">
 maxalloc 700, 75; Limit instances
@@ -50,10 +50,13 @@ gkphaserate init $INITPHASERATE
 ;;;giImpulse01     ftgen   101, 0, $SIZE, 1, "/opt/hindle1/Music/20140420/ferry-sounds3-good.WAV", 0, 0, 0	
 ;;;giImpulse01     ftgen   101, 0, $SIZE, 1, "./palette/some-jam.wav", 0, 0, 0	
 giImpulse01     ftgen   101, 0, $SIZE, 1, "goldberg-aria-da-capo.wav", 0, 0, 0	
-giImpulse02     ftgen   102, 0, $SIZE, 1, "videogames.wav", 0, 0, 0	
+;giImpulse02     ftgen   102, 0, $SIZE, 1, "videogames.wav", 0, 0, 0	
+giImpulse02     ftgen   102, 0, $SIZE, 1, "Gesualdo-O_vos_omnes.wav", 0, 0, 0	
 giImpulse03     ftgen   103, 0, $SIZE, 1, "some-jam.wav", 0, 0, 0	
 giImpulse04     ftgen   104, 0, $SIZE, 1, "ferry-sounds3-good.WAV", 0, 0, 0	
-giImpulse05     ftgen   105, 0, $SIZE, 1, "Sabatini-Scaramouche-01-01.wav", 0, 0, 0	
+giImpulse05     ftgen   105, 0, $SIZE, 1, "Sabatini-Scaramouche-01-01-44k-mono.wav", 0, 0, 0	
+giImpulse06     ftgen   106, 0, $SIZE, 1, "videogames.wav", 0, 0, 0	
+giImpulse07     ftgen   107, 0, $SIZE, 1, "short-noise-burst.wav", 0, 0, 0	
 
 
 
@@ -86,7 +89,7 @@ FLpanel 	"Granular $PORT",325,100
     gkDur,    iknob5 FLknob  "Dur", 0.001, 1.0, -1,1, -1, 50, 150,25
     gkphaserate,    iknob6 FLknob  "PhaseR", 0.001, 4.0, -1,1, -1, 50, 225,25
 
-    gkTab, iroller FLtext "Choice", 101, 105, 1, 3, 50, 50, 275, 25
+    gkTab, iroller FLtext "Choice", 101, $MAXTAB, 1, 3, 50, 50, 275, 25
 
     ;kout, ihandle FLslider "label", imin, imax, iexp, itype, idisp, iwidth, 
     ;  iheight, ix, iy

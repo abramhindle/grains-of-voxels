@@ -39,3 +39,9 @@ format:
 
 manygrain-4101-0.csd manygrain-4102-0.csd manygrain-4103-0.csd manygrain-4104-0.csd manygrain-4101-1.csd manygrain-4102-1.csd manygrain-4103-1.csd manygrain-4104-1.csd: genmanygrains.pl manygrain.csd.tmpl
 	perl genmanygrains.pl
+
+part1: 
+	make playSampleOSC 2> /dev/null > /dev/null 
+part2: playMultiScanOSC
+	make playMultiScanOSC 2> /dev/null > /dev/null 
+part3: part1
